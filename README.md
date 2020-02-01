@@ -32,7 +32,7 @@ Basically it's a game made to be hacked. For more info, here's a link: https://w
 
 They do a silly write-up about it apparently. 
 
-I first knew about the game from a friend in class, and then I found out LiveOverflow's series on YouTube about the game. I watched only the first part of the first video and then decided not to spoil anymore of the game and try to do it myself.
+I first knew about the game from a friend in class, and then I found out about LiveOverflow's series on YouTube about the game. I watched only the first part of the first video and then decided not to spoil anymore of the game and try to do it myself.
 
 By documenting (parts of) *My Glamorous Noobness's* journey, I wish to help other noobs (potentially equally glamorous as myself) with their own journeys, and also learn from them through their feedback.
 I also think it will be overall fun to look back at this, many years from now, and think "pfsh, noob", like I've already done a couple of times so far.
@@ -41,7 +41,7 @@ Also, this is the first time I'll be reverse-engineering something that's not a 
 
 ### *<u>PLEASE BE ADVISED OF THE FOLLOWING:</u>*
 
-- Here be strong language (maybe, I don't know, I still haven't wrote anything). At your risk and peril.
+- Here be strong language (maybe, I don't know, I still haven't written anything). At your risk and peril.
 - This documentation is not meant to be a tutorial, really, and it will skip over most of the boring bits.
 - There are probably better tutorials and write-ups elsewhere (like LiveOverflow's one which I still haven't watched), but I still want to document how I did
 - I am a non-native English speaker. Just ignore language mistakes unless the sentence really doesn't make any sense. In which case, please do inform glamorous_noob. (Thank you!)

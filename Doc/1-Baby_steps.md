@@ -69,10 +69,10 @@ The second thing that comes to mind is just looking at the game files, their ext
     │		ssleay32.dll
     │	
     └───Config
-    │   	DefaultEditor.dll
-    │   	DefaultEngine.dll
-    │   	DefaultGame.dll
-    │   	DefaultInput.dll
+    │   	DefaultEditor.ini
+    │   	DefaultEngine.ini
+    │   	DefaultGame.ini
+    │   	DefaultInput.ini
     └───Content
     	│
     	└───Paks
@@ -94,7 +94,7 @@ and:
 > PAK files are primarily used by video games but may also be used by other applications such as the Google Chrome web browser. The format for a PAK file used by one game may differ from the PAK format used for a different game. Therefore, you may have to try multiple programs before opening your PAK file.
 
 So naturally I tried opening them `.pak` files like I would do with an archive, it didn't work.
-I also tried using python' module *"expak"* which is supposed to extract and process Quake-style `.pak` files. But it just gave me this sad sad message:
+I also tried using python's module *"expak"* which is supposed to extract and process Quake-style `.pak` files. But it just gave me this sad sad message:
 
 ```python
 >>> import expak
