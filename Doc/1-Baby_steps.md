@@ -5,9 +5,13 @@
 ### Contents
 
 [I - "Playing" the game](#i---playing-the-game)
+
 [II - Defining my first objective](#ii---defining-my-first-objective)
+
 [III - Exploring  the game files](#iii---exploring--the-game-files)
+
 [IV - Getting distracted by `.pak` files](#iv---getting-distracted-by-pak-files)
+
 [V - Creating a Ghidra project](#v---creating-a-ghidra-project)
 
 ------
