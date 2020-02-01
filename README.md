@@ -2,6 +2,18 @@
 
 ##  0 - Introduction & Context
 
+### Contents
+
+[Who is glamorous_noob?](#who-is-glamorous_noob)
+
+[What is PwnAdventure3?](#what-is-pwnadventure3)
+
+[What happens when glamorous_noob meets PwnAdventure3?](#what-happens-when-glamorous_noob-meets-pwnadventure3)
+
+[Some kind of disclaimer](#please-be-advised-of-the-following)
+
+------
+
 ### Who is glamorous_noob? 
 
 I am glamorous_noob. I am a noob who is glamorous.
