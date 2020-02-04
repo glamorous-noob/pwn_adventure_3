@@ -1,6 +1,6 @@
 # A glamorous_noob meets PwnAdevnture3
 
-##  0 - Introduction & Context
+##  (0) Introduction & Context
 
 ### Contents
 
