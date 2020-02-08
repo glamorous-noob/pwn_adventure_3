@@ -56,15 +56,15 @@ Also, I had a hard time because I didn't know at the time what RTTI (Run-time Ty
 
 When I started reversing `PwnAdventure3.exe`, I thought to myself: *"This exe probably calls another program since its size is only 435 KB, I want to confirm that."* I know about one Windows API function for creating another process and that is `CreateProcess` (and of course the two variants `CreateProcessA` and `CreateProcessW` but it's still the same core). I searched for the function in the symbol tree and found one reference to it. I read its documentation to find that the second argument is the command line for the new process to be executed. I trace the argument back to where it was created and to no one's surprise, it is the canonical path to `PwnAdventure3-Win32-Shipping.exe`.
 
-While I was doing that I learned about several Windows API functions, how the `.rsrc`segment works globally and I thought about how lousy it is not to know of a "GetResourceById" thingy in Ghidra that would jump to the address of the resource given its ID. It might be there without me knowing about it, or it might be easily programmable, but didn't really look further. I needed to look for only one resource so I did it manually.
+While I was doing that I learned about several Windows API functions, and how the `.rsrc`segment works globally and I thought about how lousy it is not to know of a "GetResourceById" thingy in Ghidra that would jump to the address of the resource given its ID. It might be there without me knowing about it, or it might be easily programmable, but didn't really look further. I needed to look for only one resource so I did it manually.
 
 Besides that, I tried searching in the symbol tree for symbols containing "Character", "Player", "Health", "Mana" in `PwnAdventure3-Win32-Shipping.exe`, but to no avail.
 
 ### IV - Clues and false dead ends
 
-This time, I thought I'd actually look into the code of `CreateCharacter` whose symbol seen in the previous screenshot of `GameLogic.dll`, hoping it would give me information about *where* a character is created and what attributes it has.
+This time, I thought I'd actually look into the code of `CreateCharacter` whose symbol is seen in the previous screenshot of `GameLogic.dll`, hoping it would give me information about *where* a character is created and what attributes it has.
 
-![filtered_symbol_tree_player](Images\CreateCharacter_interesting.png)
+![CreateCharacter_interesting](Images/CreateCharacter_interesting.png)
 
 The first obvious clue I found was `DAT_10097d84` which by the looks of it containted either a boolean keeping track of the state of the master server connection or, most probably, a the address of a [singleton](https://en.wikipedia.org/wiki/Singleton_pattern) master server connection object (whose format is unclear yet). The other clue was the vftable whose address is being stored into a stack variable. This is what made me look for and find all the other vftables in this binary, along with RTTI structures which I had no clue about before this project. While doing that, I recognized classes from the first 3 minutes of the gameplay like `GiantRat` and `GreatBallsOfFire`.
 
@@ -72,7 +72,7 @@ I wasn't able to advance anymore on `CreateCharacter` though since I had no idea
 
 ![creactecharactervftable](Images/creactecharactervftable.png)
 
-So I moved to looking at classes who actually had human-readable names like those of spells and enemies, thinking if I do understand their format maybe I will find things related to mana consumption. The vftables of spell-representing classes contained a little less than 40 function pointers. Apprently they all implemented the IItem interface, I spent a lot of time trying to figure out what certain functions did. A lot of them were easy since they consisted of returning a string (like a toString method or a getDescription or getTitle etc.) , but most of them were not, especially without knowing the structure of the class being manipulated. I tried to manually create types for classes and separate types for vftables so I would have something like `someobject->vftable.toStringmethod()` instead of the dreadful `(code*)((*(void**)someobject)+0xc)()` that a decompiler would typically create without having the right types. I made some effort but it was a big mess of not knowing where to start.
+So I moved on to classes that actually had human-readable names like those of spells and enemies, thinking if I do understand their format maybe I will find things related to mana consumption. The vftables of spell-representing classes contained a little less than 40 function pointers. Apprently they all implemented the IItem interface, I spent a lot of time trying to figure out what certain functions did. A lot of them were easy since they consisted of returning a string (like a toString method or a getDescription or getTitle etc.) , but most of them were not, especially without knowing the structure of the class being manipulated. I tried to manually create types for classes and separate types for vftables so I would have something like `someobject->vftable.toStringmethod()` instead of the dreadful `(code*)((*(void**)someobject)+0xc)()` that a decompiler would typically create without having the right types. I made some effort but it was a big mess of not knowing where to start.
 
 The same problem occurred again when I found a class called `Player` that had TWO vftables because it had multiple inheritance. The combined total of pointers in this class's vftables is about 100. 
 
