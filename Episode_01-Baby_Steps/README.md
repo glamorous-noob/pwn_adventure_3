@@ -1,4 +1,4 @@
-# A glamorous_noob meets PwnAdevnture3
+# A glamorous_noob meets Pwn Adevnture 3
 
 ## (1) Baby steps
 
