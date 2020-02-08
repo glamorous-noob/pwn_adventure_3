@@ -27,9 +27,9 @@ if __name__ == "__main__":
   ind+=1
   for title in titles:
     link = "".join(c for c in title.lower().replace(' ','-') if c in alphabet)
-    lines.insert(ind,"["+title+"](#"+link+")\n")
+    lines.insert(ind,"["+title+"](#"+link+")\n\n")
     ind+=1
-  lines.insert(ind,'\n------\n')
+  lines.insert(ind,'------\n')
   
   for line in lines:
     stdout.write(line)
