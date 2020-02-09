@@ -66,13 +66,13 @@ This time, I thought I'd actually look into the code of `CreateCharacter` whose 
 
 ![CreateCharacter_interesting](Images/CreateCharacter_interesting.png)
 
-The first obvious clue I found was `DAT_10097d84` which by the looks of it containted either a boolean keeping track of the state of the master server connection or, most probably, a the address of a [singleton](https://en.wikipedia.org/wiki/Singleton_pattern) master server connection object (whose format is unclear yet). The other clue was the vftable whose address is being stored into a stack variable. This is what made me look for and find all the other vftables in this binary, along with RTTI structures which I had no clue about before this project. While doing that, I recognized classes from the first 3 minutes of the gameplay like `GiantRat` and `GreatBallsOfFire`.
+The first obvious clue I found was `DAT_10097d84` which by the looks of it containted either a boolean keeping track of the state of the master server connection or, most probably, the address of a [singleton](https://en.wikipedia.org/wiki/Singleton_pattern) master server connection object (whose format is unclear yet). The other clue was the vftable whose address is being stored into a stack variable. This is what made me look for and find all the other vftables in this binary, along with RTTI structures which I had no clue about before this project. While doing that, I recognized classes from the first 3 minutes of the gameplay like `GiantRat` and `GreatBallsOfFire`.
 
 I wasn't able to advance anymore on `CreateCharacter` though since I had no idea what kind of data was being manipulated in this function. I couldn't find a `Character` class. And following the vftable link led me to this nightmare:
 
 ![creactecharactervftable](Images/creactecharactervftable.png)
 
-So I moved on to classes that actually had human-readable names like those of spells and enemies, thinking if I do understand their format maybe I will find things related to mana consumption. The vftables of spell-representing classes contained a little less than 40 function pointers. Apprently they all implemented the IItem interface, I spent a lot of time trying to figure out what certain functions did. A lot of them were easy since they consisted of returning a string (like a toString method or a getDescription or getTitle etc.) , but most of them were not, especially without knowing the structure of the class being manipulated. I tried to manually create types for classes and separate types for vftables so I would have something like `someobject->vftable.toStringmethod()` instead of the dreadful `(code*)((*(void**)someobject)+0xc)()` that a decompiler would typically create without having the right types. I made some effort but it was a big mess of not knowing where to start.
+So I moved on to classes that actually had human-readable names like those of spells and enemies, thinking if I do understand their format maybe I will find things related to mana consumption. The vftables of spell-representing classes contained a little less than 40 function pointers. Apprently they all implemented the `IItem` interface. I spent a lot of time trying to figure out what certain functions did. A lot of them were easy since they consisted of returning a string (like a toString method or a getDescription or getTitle etc.) , but most of them were not, especially without knowing the structure of the class being manipulated. I tried to manually create types for classes and separate types for vftables so I would have something like `someobject->vftable.toStringmethod()` instead of the dreadful `(code*)((*(void**)someobject)+0xc)()` that a decompiler would typically create without having the right types. I made some effort but it was a big mess of not knowing where to start.
 
 The same problem occurred again when I found a class called `Player` that had TWO vftables because it had multiple inheritance. The combined total of pointers in this class's vftables is about 100. 
 
@@ -100,11 +100,11 @@ The first result shows that there **SHOULD** be imports from the `GameAPI` class
 
 ![GameLogic_string](Images/GameLogic_string.png)
 
-With absolutely no sign of GameLogic.dll in the symbol tree, I started tackling how PE exectables handle imports and exports and I found these particular two links to be really useful: [link#1](http://ulsrl.org/pe-portable-executable/) , [link#2](http://www.openrce.org/reference_library/files/reference/PE%20Format.pdf). Thanks to that, and by retracing the reference made to the "GameLogic.dll" string, I was able to find my way up to the IAT (Import Address Table) of `GameLogic.dll`!
+With absolutely no sign of `GameLogic.dll` members in the symbol tree, I started tackling how PE exectables handle imports and exports and I found these particular two links to be really useful: [link#1](http://ulsrl.org/pe-portable-executable/) , [link#2](http://www.openrce.org/reference_library/files/reference/PE%20Format.pdf). Thanks to that, and by retracing the reference made to the "GameLogic.dll" string, I was able to find my way up to the IAT (Import Address Table) of `GameLogic.dll`!
 
 ![gamelogic_iat](Images/gamelogic_iat.png)
 
-In spite of that, that when I follow the IAT address, I find a list of "normal" function addresses and not thunk function addresses as they should be. That's the second Ghidra betrayal. It did not map the thunk functions to their names in the imported dll.
+In spite of that, when I follow the IAT address, I find a list of "normal" function addresses and not thunk function addresses as they should be. That's the second Ghidra betrayal. It did not map the thunk functions to their names in the imported dll.
 
 ### VII - So what's next?
 
