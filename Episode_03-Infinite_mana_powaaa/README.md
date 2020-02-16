@@ -16,13 +16,11 @@
 
 ------
 
-
-
 ### I - TLDR
 
 - Make a copy of `GameLogic.dll` (as backup)
 - Open it with a hex editor
-- Go to `0x519c3` offset
+- Go to offset `0x519c3` 
 - Write `90 90 90 90` instead of `7c e6 29 d0`, replacing `JL` and `SUB` instructions with 4 `NOP` instructions
 - Run the game (make sure the modified file is called `GameLogic.dll`)
 - Enjoy infinite mana
