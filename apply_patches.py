@@ -6,17 +6,25 @@ def use_mana_patch(gamelogic_bytes):
   for i in range(start_addr, start_addr+4):
     gamelogic_bytes[i]=0x90
 
-def cant_be_damaged(gamelogic_bytes):
+def cant_be_damaged_patch(gamelogic_bytes):
   start_addr=0x7726c
   print("Player.canBeDamaged() returns false")
   gamelogic_bytes[start_addr]=0xc0
   gamelogic_bytes[start_addr+1]=0x16
-    
+
+def player_call_actor_damage_patch(gamelogic_bytes):
+  start_addr=0x505d6
+  print("Player.Damage() doesn't call Actor.Damage()")
+  gamelogic_bytes[start_addr]=0x23
+  gamelogic_bytes[start_addr+1]=0x0f
+  
 patch_strings=["Mana never decreases when used (Infinite Mana)", \
                 "Player can't be damaged (Infinite Health)", \
+                "Received damage is never applied (Infinite Health)" \
                 ] 
 patch_funcs=[use_mana_patch, \
-              cant_be_damaged, \
+              cant_be_damaged_patch, \
+              player_call_actor_damage_patch \
               ]
 apply_patch = dict()
 for s,f in zip(patch_strings, patch_funcs):
