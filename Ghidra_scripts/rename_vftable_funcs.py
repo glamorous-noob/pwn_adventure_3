@@ -3,6 +3,7 @@
 # The script expects the currentAddress to be equal to the beginning of the vftable
 # The default "vftable" symbol name is renamed to improve readability
 # __thiscall and custom variable storage are set to all of the vftable's functions
+# Do not use it unless you understand it line by line
 
 from ghidra.program.model.symbol import SourceType, SymbolType
 

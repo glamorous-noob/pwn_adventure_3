@@ -4,6 +4,8 @@ While suffering my way into understanding how to tackle this game, I had several
 
 This folder contains the list of the scripts I've made so far.
 
+You should not use any of them if you do not understand every single line and what it does.
+
 ## Scripts
 
 ### Rename_vftable_funcs.py
