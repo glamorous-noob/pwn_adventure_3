@@ -12,6 +12,8 @@
 
 [Some kind of disclaimer](#please-be-advised-of-the-following)
 
+[Progress made](#progress-made)
+
 ------
 
 ### Who is glamorous_noob? 
@@ -46,3 +48,22 @@ Also, this is the first time I'll be reverse-engineering something that's not a 
 - There are probably better tutorials and write-ups elsewhere (like LiveOverflow's one which I still haven't watched), but I still want to document how I did
 - I am a non-native English speaker. Just ignore language mistakes unless the sentence really doesn't make any sense. In which case, please do inform glamorous_noob. (Thank you!)
 - As a glamorous noob, I would be happy to get useful RE tips, may it be to improve the reliability, the elegancy, or the speed of my solutions.
+
+### Progress made
+
+#### Client-side hacks
+
+As you'll see if you read the first episode, I decided to work locally first. All of the episodes made so far are about local patches. No server side yet. 
+
+- **Episode 1:** Discovering the game
+- **Episode 2:** Getting played by my laziness & Ghidra
+- **Episode 3:** Infinite mana
+- **Episode 4:** Infinite health
+- **Episode 5:** Free stuff in shops
+
+#### Server-side hacks
+
+Should be here any minute now. Just, try refreshing your browser. And restart your computer. A LOT. At least 5 times a day. Computers love that shit.
+
+
+
