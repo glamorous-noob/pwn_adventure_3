@@ -1,22 +1,26 @@
 #!/usr/bin/python3
 
+def nop_bytes(gamelogic_bytes, start_addr, n):
+  for i in range(start_addr, start_addr+n):
+    gamelogic_bytes[i] = 0x90
+
+
+def replace_bytes(gamelogic_bytes, start_addr, replacement_bytes):
+  n = len(replacement_bytes)
+  for i in range(n):
+    gamelogic_bytes[start_addr+i]=replacement_bytes[i]
+    
 def use_mana_patch(gamelogic_bytes):
-  start_addr=0x519c3
   print("Player.useMana() never decreases mana")
-  for i in range(start_addr, start_addr+4):
-    gamelogic_bytes[i]=0x90
+  nop_bytes(gamelogic_bytes, 0x519c3, 4)
 
 def cant_be_damaged_patch(gamelogic_bytes):
-  start_addr=0x7726c
   print("Player.canBeDamaged() returns false")
-  gamelogic_bytes[start_addr]=0xc0
-  gamelogic_bytes[start_addr+1]=0x16
+  replace_bytes(gamelogic_bytes, 0x7726c, [0xc0, 0x16])
 
 def player_call_actor_damage_patch(gamelogic_bytes):
-  start_addr=0x505d6
   print("Player.Damage() doesn't call Actor.Damage()")
-  gamelogic_bytes[start_addr]=0x23
-  gamelogic_bytes[start_addr+1]=0x0f
+  replace_bytes(gamelogic_bytes, 0x505d6, [0x23, 0x0f])
   
 patch_strings=["Mana never decreases when used (Infinite Mana)", \
                 "Player can't be damaged (Infinite Health)", \
