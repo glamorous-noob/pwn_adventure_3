@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 
+# code_diff == 0x1004ec5b-0x4e0x5b == 0x10000c00
+# rdata_diff == 0x1006f000 - 0x6de00 == 0x10001200
+
 def nop_bytes(gamelogic_bytes, start_addr, n):
   for i in range(start_addr, start_addr+n):
     gamelogic_bytes[i] = 0x90
