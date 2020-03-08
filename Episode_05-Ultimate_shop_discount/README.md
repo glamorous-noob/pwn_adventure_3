@@ -34,7 +34,7 @@ The gentleman you see her is Major Payne (I love the puns in this game). If you 
 
 <img src="Images/gunz_n_ammo.png" alt="Guns and ammo in the gun shop" style="zoom:50%;" />
 
-Which leads to the question following question, "*Can I, like, buy thaaat, but, without, like, having to pay any moneyyyy?*" (read that with a Valley Girl accent)
+Which leads to the following question, "*Can I, like, buy thaaat, but, without, like, having to pay any moneyyyy?*" (read that with a Valley Girl accent)
 
 And that, my friends, is the topic of this episode. By reading this last sentence you became officially my friend. You can't get out of that now.
 
@@ -44,7 +44,7 @@ Before getting around to this episode's hack, I'll mention a couple of things in
 
 #### Creating vftable types
 
-I developed the `create_vftable_type` script . The idea is to easily change the decompiler's output from `*(objectRef->vftable[5])()` to `*(objectRef->vftable->NameOf5thFunctionInVftable)()` without suffering much (searching for stuff and renaming fields manually = suffering).
+I developed the `create_vftable_type.py` script . The idea is to easily change the decompiler's output from `*(objectRef->vftable[5])()` to `*(objectRef->vftable->NameOf5thFunctionInVftable)()` without suffering much (searching for stuff and renaming fields manually = suffering).
 
 So my script does a bunch of stuff to achieve this and it's explained in more detail in the `Ghidra_scripts` folder's `README.md`. It has screenshots and shit.
 
@@ -70,11 +70,11 @@ In Ghidra, you can define a struct type by choosing multiple fields of another s
 
 ### IV - Existential crisis
 
-What do I want? What kind of noob am I? Am I the kind of noob so charismatic that they get everything for free wherever they go? Or am I a more of a wealthy noob who can always afford everything in the game's universe? Can I be both? What if I walk the charisma path and later I encounter a quest that expects me to have a certain sum of PwnCoins to validate it? Etc.
+What do I want? What kind of noob am I? Am I the kind of noob so charismatic that they get everything for free wherever they go? Or am I more of a wealthy noob who can always afford everything in the game's universe? Can I be both? What if I walk the charisma path and later I encounter a quest that expects me to have a certain sum of PwnCoins to validate it? Etc.
 
 I overthought this whole thing a little bit and I decided to just make the two patches. First I'm going to try and make everything free in shops. Then I'll try to just start the game with the maximum amount of money and make sure it never decreases, without manipulating prices in shops. If I want to use one patch and not the other or use both, it's easy to do with my `apply_patches.py`.
 
-A third option was based on the `Buy` button. It gets greyed out when you can't buy an item, so I assumed it uses a " `canBuyItem`-style function". I could imagine a patch where the button always allows the buy operation, and where the buy function does no checks and just puts the shop item in the inventory without any payment. But I had no clue where the button was and I couldn't find any `canBuyItem`-style function. Although to be fair, I didn't look that much.
+A third option was based on the `Buy` button. It gets greyed out when you can't buy an item, so I assumed it uses a " `canBuyItem`-style" function. I could imagine a patch where the button always allows the buy operation, and where the buy function does no checks and just puts the shop item in the inventory without any payment. But I had no clue where the button was and I couldn't find any `canBuyItem`-style function. Although to be fair, I didn't look that much.
 
 ### V - Charismatic noob
 
@@ -126,4 +126,4 @@ In the next episode I'll try to do the infinite money patch. I might also debate
 
 Here's a fun story for you that I just remembered,  as a "thank you for reading and bearing with my weird shit so far":
 
-When I was less than 5 years old, I used to cry whenever I lost at video games. I devised this genius plan where I play in two player versus mode against no one, just a controller with no player. I still lost. Yup.
+When I was less than 5 years old, I used to cry whenever I lost at video games. I devised this genius plan where I play in two-player-versus mode against no one, just a controller with no player. I still lost. Yup.
