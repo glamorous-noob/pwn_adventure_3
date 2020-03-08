@@ -24,14 +24,27 @@ def cant_be_damaged_patch(gamelogic_bytes):
 def player_call_actor_damage_patch(gamelogic_bytes):
   print("Player.Damage() doesn't call Actor.Damage()")
   replace_bytes(gamelogic_bytes, 0x505d6, [0x23, 0x0f])
+
+def gun_shop_change_greeting(gamelogic_bytes):
+  print("GunShopOwner greets you differently")
+  new_s = "Such glamorous_noob. Much free stuff."
+  replace_bytes(gamelogic_bytes, 0x74fdc, new_s.encode('ascii')+b'\x00')
+  
+def buy_price_item_always_0(gamelogic_bytes):
+  print("NPC.GetBuyPriceForItem() always returns 0 & Player.PerformBuyItem() accepts price==0")
+  replace_bytes(gamelogic_bytes, 0x4e05b, [0x31, 0xc0])
+  nop_bytes(gamelogic_bytes, 0x53cee, 2)
+  gun_shop_change_greeting(gamelogic_bytes)
   
 patch_strings=["Mana never decreases when used (Infinite Mana)", \
                 "Player can't be damaged (Infinite Health)", \
-                "Received damage is never applied (Infinite Health)" \
+                "Received damage is never applied (Infinite Health)", \
+                "NPCs give their shop items for free (Free Merchandise)"
                 ] 
 patch_funcs=[use_mana_patch, \
               cant_be_damaged_patch, \
-              player_call_actor_damage_patch \
+              player_call_actor_damage_patch, \
+              buy_price_item_always_0
               ]
 apply_patch = dict()
 for s,f in zip(patch_strings, patch_funcs):
