@@ -1,12 +1,26 @@
 # A glamorous_noob meets Pwn Adevnture 3
 
 ## (5) Ultimate shop discount
+### Contents
+[I - TLDR](#i---tldr)
+
+[II - Civilization!](#ii---civilization)
+
+[III - Reinforcing my technical raypertwaaar](#iii---reinforcing-my-technical-raypertwaaar)
+
+[IV - Existential crisis](#iv---existential-crisis)
+
+[V - Charismatic noob](#v---charismatic-noob)
+
+[VI - Money problems](#vi---money-problems)
+
+------
 
 ### I - TLDR
 
-Me learn new Ghidra techniques.
+Me learn new Ghidra techniques for manipulate virtual functions.
 
-Me do patch for free stuff in shops. Me coded patch as `buy_price_item_always_0` in `apply_patches.py`.
+Me do patch for free stuff in shops. Me code patch as `buy_price_item_always_0` in `apply_patches.py`.
 
 Next episode much money.
 
