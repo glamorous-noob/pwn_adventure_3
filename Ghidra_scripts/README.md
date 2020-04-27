@@ -8,6 +8,16 @@ You should not use any of them if you do not understand every single line and wh
 
 ## Scripts
 
+### Vftable_activate_custom_variable_storage.py
+
+It works like this:
+
+- You place the cursor at the beginning of the vftable of `GlamorousClass`
+- You run the script
+- BAM all of its functions have custom variable storage enabled
+
+Useful if one edits the "this" parameter type a lot and wants to save 3 boring clicks per modification. Useful for other cases too but I imagine one would use that only if they know why they're doing it.
+
 ### Rename_vftable_funcs.py
 
 It works like this:
