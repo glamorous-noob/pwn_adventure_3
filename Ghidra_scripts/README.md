@@ -22,7 +22,7 @@ The most convenient way to use this script in my opinion is to start with the ba
 
 It also sets the calling convention of the vftable functions to ` __this_call` ([default calling convention in c++ with a few exceptions](https://docs.microsoft.com/en-us/cpp/cpp/thiscall?view=vs-2019)), and activates custom variable storage. Custom variable storage is a prerequisite for retyping `this` from `void *` to `GlamorousClass *` for example (to be done manually or by other scripts)
 
-### Create_vftable_type
+### Create_vftable_type.py
 
 It works like this:
 
