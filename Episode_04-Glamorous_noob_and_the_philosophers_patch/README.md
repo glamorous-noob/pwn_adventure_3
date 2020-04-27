@@ -1,4 +1,4 @@
-# A glamorous_noob meets Pwn Adevnture 3
+# A glamorous_noob meets Pwn Adventure 3
 
 ## (4) Glamorous_noob and the philosopher's patch
 ### Contents

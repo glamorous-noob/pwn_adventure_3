@@ -1,4 +1,4 @@
-# A glamorous_noob meets Pwn Adevnture 3
+# A glamorous_noob meets Pwn Adventure 3
 
 ## (3) Infinite MANA POWAAA
 ### Contents
