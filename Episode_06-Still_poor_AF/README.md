@@ -28,7 +28,7 @@ I come across what looks related to casting and polymorphism to me when examinin
 
 I run into exactly the same thing again but differently. Same but different. Yes.
 
-I figure out how coins iare implemented and added to a player (more complex than last episodes) and I do a magnificent yet non functional patch. Sad.
+I figure out how coins are implemented and added to a player (more complex than last episodes) and I do a magnificent yet non functional patch. Sad.
 
 ### II - Intro
 
@@ -52,10 +52,10 @@ First lead? The `RemoveItem` function:
 Look at this `RemoveItem` function. WTF is happening in that `PerformRemoveItem` call? The first argument here is supposed to be `this` and it should be passed through the `ECX` register (see [this link](https://en.wikipedia.org/wiki/X86_calling_conventions#thiscall) if not familiar with ` __thiscall`). Here's how it looks in assembly:
 
 ```assembly
-PUSH	dword ptr [EBP + param_2] ; push param_2 as a stack argument
-LEA		ECX,[EDI + -0x70] ; put the address of (this-0x70) in ECX
-PUSH	dword ptr [EBP + param_1] ; push param_1 as a stack argument
-CALL	0x100521c0 ; call PerformRemoveItem with whatever in ECX as the address of "this"
+PUSH     dword ptr [EBP + param_2] ; push param_2 as a stack argument
+LEA      ECX,[EDI + -0x70] ; put the address of (this-0x70) in ECX
+PUSH     dword ptr [EBP + param_1] ; push param_1 as a stack argument
+CALL     0x100521c0 ; call PerformRemoveItem with whatever in ECX as the address of "this"
 ```
 
 Knowing that `EDI` contained the `this` reference, the second instruction above seemed weird AF. It's always been `this+something` and never `this-something`. And how would the decompiler think that subtracting `0x70` is actually advancing inside the structure?
@@ -63,27 +63,27 @@ Knowing that `EDI` contained the `this` reference, the second instruction above 
 After going back and forth between functions I understood what was happening in part. Here's my attempt at explaining this with a diagram. It will also serve as a demonstration of how bad I would be as an ASCII artist.
 
 ```
-    Player instance					address of instance of IPlayer or one of its derived classes
-     ____________ Actor Part at @a					     	   	   ↓↓
-    |			|										 	    ↓↓ this
-    |			|									__________________________________
-    |____________| IPlayer Part at @a+x70	            IPlayer virtual function (vf)		  
-    |			|									__________________________________
-    |			|
+    Player instance                    address of instance of IPlayer or one of its derived classes
+     ____________ Actor Part at @a                                   ↓↓
+    |            |                                                   ↓↓ this
+    |            |                                      __________________________________
+    |____________| IPlayer Part at @a+x70                  IPlayer virtual function (vf)		  
+    |            |                                      __________________________________
+    |            |
     |____________|
-Each part starts with a vftable				vf is allowed to have a different    
-address + a bunch of attributes				implementation for every class but
-following the model of the					it has to keep the same signature 
-corresponding base class					across classes to ensure polymorphism
+Each part starts with a vftable               vf is allowed to have a different    
+address + a bunch of attributes               implementation for every class but
+following the model of the                    it has to keep the same signature 
+corresponding base class                      across classes to ensure polymorphism
 ```
 
 We're talking about a `Player`'s implementation of an `IPlayer` virtual function (`RemoveItem`). The `IPlayer` part inside a `Player` instance starts at `0x70`, as analyzed in previous episodes. See where this is going? The `RemoveItem` function was actually called like this (assume that `EBX` contains the `this` reference):
 
 ```assembly
-MOV		ESI,dword ptr [EBX + 0x70] ; put the dword at this+0x70 in ESI (address of IPlayer vftable)
-LEA		ECX,[EBX + 0x70] ; put the address of (this+0x70) in ECX (address of IPlayer part)
-MOV		EAX,dword ptr [ESI + 0x34] ; put (vtable+0x34) in EAX (address of RemoveItem)
-CALL	EAX ; call RemoveItem
+MOV      ESI,dword ptr [EBX + 0x70] ; put the dword at this+0x70 in ESI (address of IPlayer vftable)
+LEA      ECX,[EBX + 0x70] ; put the address of (this+0x70) in ECX (address of IPlayer part)
+MOV      EAX,dword ptr [ESI + 0x34] ; put (vtable+0x34) in EAX (address of RemoveItem)
+CALL     EAX ; call RemoveItem
 ```
 
 So what was passed as `this` through `ECX` for `RemoveItem` was **<u>NOT</u>** the address of the `Player` instance, but instead, the address of the `IPlayer` part inside of said instance. **THAT'S UPCASTING!** And the thing that happened inside the `RemoveItem` where the `0x70` were subtracted again, that must be downcasting! Such revelation, much knowledge. As usual, here are a couple of links: [casting in C++](https://www.tutorialcup.com/cplusplus/upcasting-downcasting.htm), and [casting in java if you prefer the Java syntax (I do honestly))](https://www.codejava.net/java-core/the-java-language/what-is-upcasting-and-downcasting-in-java). I feel the need to note the following points before the imaginary random antagonist from last episode butts in:
@@ -112,7 +112,7 @@ Long story short, I went to `useMana`, retyped its `this` from `Player` to `IPla
 
 ### V - False lead:  Quantity of  `IItem`
 
-I edited the signature of find (compare screenshot below to 2nd screenshot above) to add one more argument based on the push instructions just before and then checked the code of the `find` function itself to see that it did access the stack parameter area and that it made sense.
+I edited the signature of `find` (compare screenshot below to 2nd screenshot above) to add one more argument based on the push instructions just before and then checked the code of the `find` function itself to see that it did access the stack parameter area and that it made sense.
 
 ![find_modified](Images/find_modified.png)
 
