@@ -2,10 +2,11 @@
 #@category TheirGlamorousNoobness
 # The script expects the currentAddress to be equal to the beginning of the vftable
 # A vftable type is created and the names of its fields named after the vftable functions names
+# The fields are typed as dword returning __thiscall function pointers
 # Do not use it unless you understand it line by line
 
 from ghidra.program.model.symbol import SourceType, SymbolType
-from ghidra.program.model.data import CategoryPath, StructureDataType, DataTypeConflictHandler, PointerDataType, FunctionDefinitionDataType, DWordDataType
+from ghidra.program.model.data import CategoryPath, StructureDataType, DataTypeConflictHandler, PointerDataType, FunctionDefinitionDataType, DWordDataType, GenericCallingConvention
 
 naming_prefix = "TGN_"
 categoryPathString = "/TGN"
@@ -37,6 +38,7 @@ else:
     assert(func!=None)
     func_name = func.getName()
     func_dt = FunctionDefinitionDataType("TGN_func")
+    func_dt.setGenericCallingConvention(GenericCallingConvention.thiscall)
     func_dt.setReturnType(DWordDataType())
     datatype = PointerDataType(func_dt)
     vftable_type.insert(i, datatype, datatype.getLength(), func_name, "TGN: Automatically created field")
