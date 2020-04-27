@@ -60,6 +60,7 @@ As you'll see if you read the first episode, I decided to work locally first. Al
 - **Episode 3:** Infinite mana
 - **Episode 4:** Infinite health
 - **Episode 5:** Free stuff in shops
+- **Episode 6:** Unsuccessful attempt at getting rich fast
 
 #### Server-side hacks
 
