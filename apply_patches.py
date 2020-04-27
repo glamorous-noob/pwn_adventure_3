@@ -30,7 +30,7 @@ def gun_shop_change_greeting(gamelogic_bytes):
   new_s = "Such glamorous_noob. Much free stuff."
   replace_bytes(gamelogic_bytes, 0x74fdc, new_s.encode('ascii')+b'\x00')
   
-def buy_price_item_always_0(gamelogic_bytes):
+def buy_price_item_always_0_patch(gamelogic_bytes):
   print("NPC.GetBuyPriceForItem() always returns 0 & Player.PerformBuyItem() accepts price==0")
   replace_bytes(gamelogic_bytes, 0x4e05b, [0x31, 0xc0])
   nop_bytes(gamelogic_bytes, 0x53cee, 2)
