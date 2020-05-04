@@ -92,7 +92,7 @@ So what was passed as `this` through `ECX` for `RemoveItem` was **<u>NOT</u>** t
 - I think the only reason the casting in this situation was so "tangible" is because of the multiple inheritance. If a class has only one base class it will have only one vftable, and as far as I can imagine, there would be no need to add/subtract offsets.
 - At the assembly or even at the decompiled C level, the `this` reference and its type are part of the function's signature, which is not the case in C++ code.  That's why speaking about function signatures, polymorphism, and casting in this context might seem confusing. For the record, I'm not sure it's absolutely 100% technically correct to use the words "upcasting" and "downcasting" as I did in this context but they do seem appropriate to me.
 
-Btw, it would've been easier to spot if I had correctly typed the `RemoveItem` field in the vftable type for IPlayer with the correct calling convention `__thiscall`. I would've seen the `this` parameter being passed as `&(this->self).iplayer_part` instead of just `this`. It has been taken care of, but only a few minutes before uploading this file.
+Btw, it would've been easier to spot if I had correctly typed the `RemoveItem` field in the vftable type for `IPlayer` with the correct calling convention `__thiscall`. I would've seen the `this` parameter being passed as `&(this->self).iplayer_part` instead of just `this`. It has been taken care of, but only a few minutes before uploading this file.
 
 ![correct_additem_call](Images/correct_additem_call.png)
 
@@ -128,7 +128,7 @@ The next goal was to find where the money item is created and modify the count d
 
 I usually ignore the c++ demangled gibberish, but this one time I read it in the line 87 and noticed `ItemAndCount`. It appears to be an existing type, which I have not defined, that has an `IItem` reference + its count. I didn't like this crap because it's making me question all of my progress on this matter so far (it seems little but it took days). I thought the count was in the `IItem` itself.
 
-This frustration aside, the `_Buyheadnode` bit was pretty cool. It took one  web search to find links for the `xtree` implementation in c++ on github. It looks like an implementation of a red-black tree. The relevant part to know in our context is that it is a data structure optimized for finding stuff, it is used for implementing maps / sets, and it's accessible via its root (head node) to which a reference is kept somewhere. I learned said stuff from algorithms classes in university + some web searches. The `playerItems` field seems to keep a reference to this `xtree` that keeps track of items. And now, the `playerItems.find` function makes sense: it's asking the tree to put a reference of the node containing the item in the local variable. 
+This frustration aside, the `_Buyheadnode` bit was pretty cool. It took one  web search to find links for the `xtree` implementation in c++ on GitHub. It looks like an implementation of a red-black tree. The relevant part to know in our context is that it is a data structure optimized for finding stuff, it is used for implementing maps / sets, and it's accessible via its root (head node) to which a reference is kept somewhere. I learned said stuff from algorithms classes in university + some web searches. The `playerItems` field seems to keep a reference to this `xtree` that keeps track of items. And now, the `playerItems.find` function makes sense: it's asking the tree to put a reference of the node containing the item in the local variable. 
 
 Bottom line is, it's sure now that `playerItems` is just a 4-byte field because it's only keeping a reference to the head node.
 
@@ -167,7 +167,7 @@ This code was in some few `PerformUse` functions belonging to a `SomethingChest`
 
 ![performuse](Images/performuse.png)
 
-And I thought, if coins are stored in a tree, which is dynamically allocated across the game, I'm better just calling the get-item-add-item duo somewhere than trying to modify a field as I previously imagined.
+And I thought, if coins are stored in a tree, which is dynamically allocated across the game, I'm better off just calling the get-item-add-item duo somewhere than trying to modify a field as I previously imagined.
 
 ### VII - Patch: Making room
 
@@ -185,21 +185,21 @@ For instance, one could replace the first block of `MOV` instructions giving the
 
 ![memset_patch](Images/memset_patch.png)
 
-Here's the `memset` call. The first 2 `PUSH` along with the 2 `POP` instructions are just for [register preservation](https://en.wikipedia.org/wiki/X86_calling_conventions#Register_preservation). The rest is about giving 3 stack arguments to `memset`, calling it, and then cleaning the stack by modifying `ESP`. I chose the `0x12c` offset in the `Player` instance because at execution time this will be the smallest offset that hasn't been intialized yet. The value `0xbc` is just the number of bytes to be set to 0 seeing that the total size of the instance is `0x1dc` (`0x1dc-0x12c`). With this, I am able to overwrite any instruction setting a field to 0, as long as the field has an offset equal to or greater than `0x12c`.
+Here's the `memset` call. The first 2 `PUSH` along with the 2 `POP` instructions are just for [register preservation](https://en.wikipedia.org/wiki/X86_calling_conventions#Register_preservation). The rest is about giving 3 stack arguments to `memset`, calling it, and then cleaning the stack by modifying `ESP`. I chose the `0x12c` offset in the `Player` instance because at execution time this will be the smallest offset that hasn't been initialized yet. The value `0xbc` is just the number of bytes to be set to 0 seeing that the total size of the instance is `0x1dc` (`0x1dc-0x12c`). With this, I am able to overwrite any instruction setting a field to 0, as long as the field has an offset equal to or greater than `0x12c`.
 
 ### VIII - Patch: Supposedly adding coins
 
-Call me greedy, but I managed to fit the the money patch right after the memset call and not a few C lines worth of instructions later as first imagined. The patch modifies the contents of `EAX` and `ECX` as a side-effect which could in theory screw with the execution of later code. After checking, the contents of `EAX` are never used beffore being overwritten by the original code itself when `_Buyheadnode` is called. As for `ECX`, a quick read of the assembly code shows that a `MOV ECX, EDI` after the patch and before the next function call should make everything back to normal. A cleaner way would be pushing to the stack before the patch and popping after but, as my French friends would say, "flemme".
+Call me greedy, but I managed to fit the the money patch right after the `memset` call and not a few C lines worth of instructions later as I first imagined. The patch modifies the contents of `EAX` and `ECX` as a side-effect which could in theory screw with the execution of later code. After checking, the contents of `EAX` are never used before being overwritten by the original code itself when `_Buyheadnode` is called. As for `ECX`, a quick read of the assembly code shows that a `MOV ECX, EDI` after the patch and before the next function call should make everything back to normal. A cleaner way would be pushing to the stack before the patch and popping after but, as my French friends would say, "flemme".
 
 ![money_patch](Images/money_patch.png)
 
-And below, is an illustration of what failure looks like
+And below, is an illustration of what failure looks like.
 
 ![money_patch](Images/failure.png)
 
 ### IX - What next
 
-The patch didn't work. Either the idea is solid but the execution was sloppy, or the idea isn't working. For instance, maybe the `getItemByName("Coin")` returns 0 because the items in the game aren't initialized yet by the time the player is created and my patch is exectued. Maybe I should trigger my patch later in the game? Maybe link it to an action I can easily do?
+The patch didn't work. Either the idea is solid but the execution was sloppy, or the idea isn't working. For instance, maybe the `getItemByName("Coin")` returns 0 because the items in the game aren't initialized yet by the time the player is created and my patch is executed. Maybe I should trigger my patch later in the game? Maybe link it to an action I can easily do?
 
 Aside from the money issue, there are a lot of things I would like to achieve like walking faster, or 1 shot 1 kill, etc.
 
