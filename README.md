@@ -51,9 +51,11 @@ Also, this is the first time I'll be reverse-engineering something that's not a 
 
 ### Progress made
 
+As you'll see if you read the first episode, I decided to work locally first. All of the episodes made so far are about local patches. No server side yet.
+
 #### Client-side hacks
 
-As you'll see if you read the first episode, I decided to work locally first. All of the episodes made so far are about local patches. No server side yet. 
+I mostly do static analysis. No dynamic analysis. Sometimes though I'll use a debugger when I need to debug my own patches (which I'll mention in the corresponding episode).
 
 - **Episode 1:** Discovering the game
 - **Episode 2:** Getting played by my laziness & Ghidra
@@ -61,6 +63,7 @@ As you'll see if you read the first episode, I decided to work locally first. Al
 - **Episode 4:** Infinite health
 - **Episode 5:** Free stuff in shops
 - **Episode 6:** Unsuccessful attempt at getting rich fast
+- **Episode 7:** Infinite money
 
 #### Server-side hacks
 
