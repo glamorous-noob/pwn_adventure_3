@@ -41,6 +41,8 @@ I also think it will be overall fun to look back at this, many years from now, a
 
 Also, this is the first time I'll be reverse-engineering something that's not a *catch-the-flag* kind of executable. So PwnAdventure3 will be a big leap out of my comfort zone in many ways.
 
+Last but not least, this is purely for training. What I'm doing in this project isn't how one would actually hack a video game IRL. Using CheatEngine for example is way faster than statically analyzing everything.
+
 ### *<u>PLEASE BE ADVISED OF THE FOLLOWING:</u>*
 
 - Here be strong language (maybe, I don't know, I still haven't written anything). At your risk and peril.

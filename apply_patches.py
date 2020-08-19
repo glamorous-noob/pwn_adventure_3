@@ -63,7 +63,7 @@ def rich_bitch_patch(gamelogic_bytes):
   memset_player_cons(gamelogic_bytes)
   offset = virtual_address_to_file_offset(0x100501af)
   patch_bytes = bytes_string_to_list("50 51 e8 ea 0a fd ff 89 c1 e8 53 2f fc ff 50 90 e8 5c dc fc ff 68 00 00 00 00 68 ff ff ff 7f 50 8b 03 89 d9 ff 90 30 00 00 00 59 58 e9 b0 84 fe ff")
-  print("Code for adding coins is insearted in dead area in Player constructor") 
+  print("Code for adding coins is inserted in dead area in Player constructor") 
   replace_bytes(gamelogic_bytes, offset, patch_bytes)
   offset = virtual_address_to_file_offset(0x1003868b)
   patch_bytes = bytes_string_to_list("e9 1f 7b 01 00 5f 5b 5d c2 04 00")
@@ -72,8 +72,8 @@ def rich_bitch_patch(gamelogic_bytes):
   print()
 
 def not_paying_patch(gamelogic_bytes):
-  offset = virtual_address_to_file_offset(0x100548f4)
-  patch_bytes = bytes_string_to_list("eb 22 90")
+  offset = virtual_address_to_file_offset(0x10054900)
+  patch_bytes = bytes_string_to_list("eb 16 90 90 90 90")
   print("RemoveItem is not called in PerformBuyItem. Bying does not decrease money.") 
   replace_bytes(gamelogic_bytes, offset, patch_bytes)
 

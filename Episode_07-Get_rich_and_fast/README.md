@@ -73,7 +73,7 @@ The money patch got shifted to make place for the extra byte in the patch size.
 
 ### IV - The execution
 
-Now what I needed was to find a good trigger. I remembered the name of a function I saw a lot in the decompiler window and the vftables during last episodes but I'd never really paid attention to it: `CanActivateInInvetory`. I guessed the word "activate" is the one to be used when firing as spell, and after searching a little bit in the symbols I found `GreatBallsOfFire::PerformActivate`. After doing the usual for the GreatBallOfFire class type and its vftable, it gives this. (Note that the second argument to `SpawnProjectile` is Ghidra's decompiler's weird way of saying `IPlayer ref - 0x70`)
+Now what I needed was to find a good trigger. I remembered the name of a function I saw a lot in the decompiler window and the vftables during last episodes but I'd never really paid attention to it: `CanActivateInInvetory`. I guessed the word "activate" is the one to be used when firing a spell, and after searching a little bit in the symbols I found `GreatBallsOfFire::PerformActivate`. After doing the usual for the GreatBallOfFire class type and its vftable, it gives this. (Note that the second argument to `SpawnProjectile` is Ghidra's decompiler's weird way of saying `IPlayer ref - 0x70`)
 
 ![GBoF_performActivate](Images/GBoF_performActivate.png)
 
@@ -86,18 +86,18 @@ This portion of code is at the end of the `PerformActivate` function. First 4 in
 If I got it correctly, processors access addresses more easily if they are aligned to a certain number of bytes (usually a power of 2), i.e. it's cool when addresses are a multiple of said 2, 4 or 8 or whatever. The actual number of bytes determining the alignment is platform-specific. So what the compiler seems to have done to this function is:
 
 - It compiled the function and gave it an address that makes it 16-byte aligned (`0x10038650`, not in the screenshots)
-- It saw that the function instructions ended at `0x10038690`, which would make the next function definition start at `0x1003891`, and address that is 1-byte aligned (so basically not aligned), and thought "Unacceptable!"
+- It saw that the function instructions ended at `0x10038690`, which would make the next function definition start at `0x1003891`, an address that is 1-byte aligned (so basically not aligned), and thought "Unacceptable!"
 - Added 15 bytes of padding so that the next function starts at `0x100386a0`. The actual instruction these padding bytes translate to is a [software interrupt](https://en.wikipedia.org/wiki/INT_(x86_instruction)). They should never be executed anyway seeing they have a return instruction just before.
 
 WHICH MEANS: I have 15 whole bytes to patch without affecting AT ALL the original function's instructions.
 
 ![align_patch](Images/align_patch.png)
 
-Notice the addresses: I just shifted the original instructions 5 bytes down to make place for mu `JMP` instruction which I placed at their original address, `0x1003868b`. I couldn't make the remaining 10 padding bytes appear as `align(10)` in Ghidra but it really doesn't change anything. Now the final step was to adapt my money patch. Here's how it looked before:
+Notice the addresses: I just shifted the original instructions 5 bytes down to make place for my `JMP` instruction which I placed at their original address, `0x1003868b`. I couldn't make the remaining 10 padding bytes appear as `align(10)` in Ghidra but it really doesn't change anything. Now the final step was to adapt my money patch. Here's how it looked before:
 
 ![old_money_patch](Images/old_money_patch.png)
 
-It used `EDI` hoping to find an `IPlayer` reference in `EDI+0x70`, and it overwrote contents in  `EAX` and `ECX` (shown as "this" in the above screenshot). Looking back at `GreatBallsOfFire::PerformActivate` though, I find it had its `IPlayer` reference directly in `EBX`. The patch needs to receive `IPlayer` through `EBX`. Which is great because it will reduce the patch size. It will also need to save `ECX` and `EAX` to the stack and recover them later, and then `JMP` back to the calling function. You can see the modified parts in the red rectangles.
+It used `EDI` hoping to find an `IPlayer` reference in `EDI+0x70`, and it overwrote contents in  `EAX` and `ECX` (shown as "this" in the above screenshot). Looking back at `GreatBallsOfFire::PerformActivate` though, I find it had its `IPlayer` reference directly in `EBX`. The patch needs to receive `IPlayer` through `EBX`, which is great because it will reduce the patch size. It will also need to save `ECX` and `EAX` to the stack and recover them later, and then `JMP` back to the calling function. You can see the modified parts in the red rectangles.
 
 ![new_money_patch](Images/new_money_patch.png)
 
