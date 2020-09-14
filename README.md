@@ -54,6 +54,15 @@ Last but not least, this is purely for training. What I'm doing in this project 
 ### Progress made
 
 As you'll see if you read the first episode, I decided to work locally first. All of the episodes made so far are about local patches. No server side yet.
+I was half-way through the 8th and last episode about static analysis when my hard drive malfunctioned. I no longer have the Ghidra project. In accordnance with my laziness policy, I will abandon this. 
+
+What next?
+
+- Maybe do stuff with CheatEngine?
+- Maybe learn how to create my own trainers and automate what I would do with CheatEngine?
+- Maybe setup a Pwn Adventure server and try to do the server-side hacks?
+
+I don't know. I will wait for motivation and inspiration.
 
 #### Client-side hacks
 
